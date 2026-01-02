@@ -35,11 +35,14 @@ class Claude:
         messages,
         system=None,
         temperature=1.0,
-        stop_sequences=[],
+        stop_sequences=None,
         tools=None,
         thinking=False,
         thinking_budget=1024,
     ) -> Message:
+        if stop_sequences is None:
+            stop_sequences = []
+
         params = {
             "model": self.model,
             "max_tokens": 8000,
