@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/.env">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/.env" />
+              <option name="originalContent" value="CLAUDE_MODEL=&quot;claude-sonnet-4-5&quot;&#10;ANTHROPIC_API_KEY=&quot;&quot;&#10;&#10;# Set to 1 if you're using uv to run the project&#10;# Set to 0 if you're *not* using uv&#10;USE_UV=1" />
+              <option name="updatedContent" value="# LLM Provider Selection&#10;# Choose &quot;claude&quot; or &quot;ollama&quot;&#10;LLM_PROVIDER=ollama&#10;&#10;# Ollama Configuration (when LLM_PROVIDER=ollama)&#10;OLLAMA_MODEL=llama3.2&#10;&#10;# Claude Configuration (when LLM_PROVIDER=claude)&#10;CLAUDE_MODEL=&quot;claude-sonnet-4-5&quot;&#10;ANTHROPIC_API_KEY=&quot;&quot;&#10;&#10;# Set to 1 if you're using uv to run the project&#10;# Set to 0 if you're *not* using uv&#10;USE_UV=1&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
