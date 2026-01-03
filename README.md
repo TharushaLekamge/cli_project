@@ -160,6 +160,28 @@ Pull any model with: `ollama pull <model-name>`
 
 Edit the `mcp_server.py` file to add new documents to the `docs` dictionary.
 
+### Testing with MCP Server Inspector
+
+The MCP Server Inspector is a built-in tool that helps you test and debug your MCP server without running the full application. It provides an interactive interface to inspect available resources, prompts, and tools.
+
+To launch the inspector:
+
+```bash
+mcp dev mcp_server.py
+```
+
+This will start an interactive session where you can:
+- View all available resources (documents)
+- Test prompts and commands
+- Inspect tool definitions
+- Debug server responses
+
+The inspector is particularly useful when:
+- Adding new documents or resources
+- Creating custom prompts
+- Debugging MCP server functionality
+- Testing changes before integrating with the chat application
+
 ### Implementing MCP Features
 
 To fully implement the MCP features:
