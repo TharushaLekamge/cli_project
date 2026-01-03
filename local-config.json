@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "DocumentMCP": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "/Users/tlekamge/personal-github/cli_project/mcp_server.py"
+      ],
+      "env": {}
+    }
+  }
+}
