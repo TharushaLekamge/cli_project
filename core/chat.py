@@ -1,12 +1,12 @@
-from core.claude import Claude
+from core.base_llm import BaseLLM
 from mcp_client import MCPClient
 from core.tools import ToolManager
 from anthropic.types import MessageParam
 
 
 class Chat:
-    def __init__(self, claude_service: Claude, clients: dict[str, MCPClient]):
-        self.claude_service: Claude = claude_service
+    def __init__(self, claude_service: BaseLLM, clients: dict[str, MCPClient]):
+        self.claude_service: BaseLLM = claude_service
         self.clients: dict[str, MCPClient] = clients
         self.messages: list[MessageParam] = []
 
@@ -21,15 +21,18 @@ class Chat:
 
         await self._process_query(query)
 
+        tools = await ToolManager.get_all_tools(self.clients)
+
         while True:
             response = self.claude_service.chat(
                 messages=self.messages,
-                tools=await ToolManager.get_all_tools(self.clients),
+                tools=tools,
             )
 
             self.claude_service.add_assistant_message(self.messages, response)
 
             if response.stop_reason == "tool_use":
+                print("texting")
                 print(self.claude_service.text_from_message(response))
                 tool_result_parts = await ToolManager.execute_tool_requests(
                     self.clients, response

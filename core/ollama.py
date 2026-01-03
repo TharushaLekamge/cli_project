@@ -1,6 +1,7 @@
 import ollama
 from anthropic.types import Message
 from typing import List, Dict, Any
+from core.base_llm import BaseLLM
 
 
 class OllamaMessage:
@@ -13,18 +14,11 @@ class OllamaMessage:
         self.stop_reason = "end_turn"
 
 
-class Ollama:
+class Ollama(BaseLLM):
     def __init__(self, model: str = "llama3.2"):
-        """
-        Initialize Ollama service.
-
-        Args:
-            model: The Ollama model to use (e.g., "llama3.2", "mistral", "codellama")
-        """
+        super().__init__(model)
         self.client = ollama.Client()
-        self.model = model
 
-        # Verify the model is available
         try:
             self.client.show(model)
         except Exception as e:
@@ -73,10 +67,14 @@ class Ollama:
         if stop_sequences is None:
             stop_sequences = []
 
-        # Convert messages to Ollama format
         ollama_messages = self._convert_messages(messages)
 
-        # Build options
+        if system:
+            ollama_messages.insert(0, {
+                "role": "system",
+                "content": system
+            })
+
         options = {
             "temperature": temperature,
             "num_predict": 8000,  # Match Claude's max_tokens
@@ -94,12 +92,49 @@ class Ollama:
             response = self.client.chat(
                 model=self.model,
                 messages=ollama_messages,
+                tools=tools,
                 options=options,
             )
 
             # Format response to match Claude's structure
-            content_text = response["message"]["content"]
+            message = response["message"]
 
+            # TOOL CALL PATH
+            if "tool_calls" in message and message["tool_calls"]:
+                print("tool calling")
+                # Convert Ollama tool calls to Claude-compatible format
+                content_blocks = []
+
+                # Add any text content first
+                if message.get("content"):
+                    content_blocks.append({
+                        "type": "text",
+                        "text": message["content"]
+                    })
+
+                # Add tool call blocks
+                for tool_call in message["tool_calls"]:
+                    # Create a tool_use block that matches Claude's structure
+                    tool_block = type('obj', (object,), {
+                        'type': 'tool_use',
+                        'id': tool_call["function"].get("name", "tool_call"),  # Use name as id
+                        'name': tool_call["function"]["name"],
+                        'input': tool_call["function"].get("arguments", {})
+                    })()
+                    content_blocks.append(tool_block)
+
+                ollama_msg = OllamaMessage(
+                    content=[{"type": "text", "text": ""}],  # Placeholder
+                    role="assistant",
+                    model=self.model,
+                )
+                # Override content with the tool blocks
+                ollama_msg.content = content_blocks
+                ollama_msg.stop_reason = "tool_use"
+                return ollama_msg
+
+            # TEXT PATH
+            content_text = message.get("content", "")
             return OllamaMessage(
                 content=[{"type": "text", "text": content_text}],
                 role="assistant",

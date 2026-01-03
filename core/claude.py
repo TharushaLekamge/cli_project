@@ -1,11 +1,12 @@
 from anthropic import Anthropic
 from anthropic.types import Message
+from core.base_llm import BaseLLM
 
 
-class Claude:
+class Claude(BaseLLM):
     def __init__(self, model: str):
+        super().__init__(model)
         self.client = Anthropic()
-        self.model = model
 
     def add_user_message(self, messages: list, message):
         user_message = {
