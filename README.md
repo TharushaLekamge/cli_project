@@ -160,6 +160,98 @@ Pull any model with: `ollama pull <model-name>`
 
 Edit the `mcp_server.py` file to add new documents to the `docs` dictionary.
 
+### Running MCP Server with Local Ollama
+
+You can run the MCP server directly with local Ollama using MCPHost. This allows you to use the DocumentMCP server with any Ollama model without the CLI chat application.
+
+#### Step 1 — Install Ollama
+
+Download and install Ollama from [ollama.ai](https://ollama.ai). Pull the Qwen3 model:
+
+```bash
+ollama pull qwen3
+```
+
+Qwen3 is a general-purpose language model. It doesn't know about our API yet — that's what the MCP Server will provide.
+
+You can also use other models like:
+```bash
+ollama pull llama3.2
+ollama pull mistral
+```
+
+#### Step 2 — Install Go
+
+Follow the instructions at [go.dev/doc/install](https://go.dev/doc/install) to install the latest version of Go.
+
+Verify installation:
+```bash
+go version
+```
+
+#### Step 3 — Install MCPHost
+
+MCPHost is the runtime that will launch our MCP Server and connect it to the AI model. Install it with:
+
+```bash
+go install github.com/mark3labs/mcphost@latest
+```
+
+You may need to add `$GOPATH/bin` (often `~/go/bin`) to your PATH:
+
+```bash
+export PATH="$HOME/go/bin:$PATH"
+```
+
+Add this line to your `~/.zshrc` or `~/.bashrc` to make it permanent.
+
+#### Step 4 — Configure the MCP Server
+
+The project includes a `local-config.json` file that defines the DocumentMCP server. This configuration tells MCPHost how to launch the server:
+
+```json
+{
+  "mcpServers": {
+    "DocumentMCP": {
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "path-to/cli_project/mcp_server.py"
+      ],
+      "env": {}
+    }
+  }
+}
+```
+
+**Note:** Update the absolute path in the config to match your project location.
+
+#### Step 5 — Run the AI Agent
+
+Start the agent with:
+
+```bash
+mcphost -m ollama:qwen3 --config ./local-config.json
+```
+
+Or with a different model:
+
+```bash
+mcphost -m ollama:llama3.2 --config ./local-config.json
+```
+
+This will start an interactive chat session where you can:
+- Ask questions about the documents
+- Use the `read_doc_contents` tool to retrieve document information
+- Use the `edit_doc_contents` tool to modify documents
+- Access document resources directly
+
+Example queries:
+- "What documents are available?"
+- "Read the contents of deposition.md"
+- "Summarize the report.pdf"
+
 ### Testing with MCP Server Inspector
 
 The MCP Server Inspector is a built-in tool that helps you test and debug your MCP server without running the full application. It provides an interactive interface to inspect available resources, prompts, and tools.
