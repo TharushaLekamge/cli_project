@@ -1,4 +1,4 @@
-Now update the readme # MCP Chat
+# MCP Chat
 
 MCP Chat is a command-line interface application that enables interactive chat capabilities with AI models. The application supports both cloud-based (Claude via Anthropic API) and local (Ollama) LLM providers, along with document retrieval, command-based prompts, and extensible tool integrations via the MCP (Model Control Protocol) architecture.
 
