@@ -259,7 +259,7 @@ The MCP Server Inspector is a built-in tool that helps you test and debug your M
 To launch the inspector:
 
 ```bash
-mcp dev mcp_server.py
+mcp dev mcp_server/mcp_server.py
 ```
 
 This will start an interactive session where you can:

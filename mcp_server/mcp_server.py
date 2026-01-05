@@ -64,7 +64,7 @@ def get_document(doc_id: str):
     return docs[doc_id]
 
 
-from .prompts import register_prompts
+from prompts import register_prompts
 register_prompts(mcp)
 
 
