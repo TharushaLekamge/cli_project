@@ -1,7 +1,7 @@
 from mcp.server import FastMCP
 from pydantic import Field
 
-from mcp_server.resources import docs
+from resources import docs
 
 
 def read_doc_contents_impl(doc_name: str):
